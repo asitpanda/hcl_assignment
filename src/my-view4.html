@@ -1,0 +1,192 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="../bower_components/google-chart/google-chart.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-view4">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">4</div>
+      <h1>View Four</h1>
+      <iron-form>
+        <div>
+          <h1>My Input Text</h1>
+          <paper-input always-float-label label="Floating label" value="{{myText}}"></paper-input>
+          <paper-input label="username" value="{{myText}}">
+            <iron-icon icon="mail" slot="prefix"></iron-icon>
+            <div slot="suffix">@email.com</div>
+          </paper-input>
+        </div>
+        <div>
+          <h1>My Checkbox</h1>
+          <template is="dom-repeat" items="{{checkboxConfig}}">
+            <paper-checkbox value="{{item.value}}" on-change="checkBoxClick">{{item.label}}</paper-checkbox>
+          </template>
+        </div>
+        <div>
+          <h1>My Radio</h1>
+          <paper-radio-group selected="{{myRadio}}">
+            <paper-radio-button name="banana">Banana</paper-radio-button>
+            <paper-radio-button name="apple">Apple</paper-radio-button>
+            <paper-radio-button name="orange">Orange</paper-radio-button>
+            <paper-radio-button name="pineapple">Pineapple</paper-radio-button>
+          </paper-radio-group>
+        </div>
+        <div>
+          <h1>My DropDown</h1>
+          <paper-dropdown-menu label="Dinosaurs">
+            <paper-listbox slot="dropdown-content" selected="1">
+              <paper-item>allosaurus</paper-item>
+              <paper-item>brontosaurus</paper-item>
+              <paper-item>carcharodontosaurus</paper-item>
+              <paper-item>diplodocus</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
+        <div>
+          <h1>My Buttons</h1>
+          <paper-button on-click="submitForm">link</paper-button>
+        </div>
+      </iron-form>
+    </div>
+    <div>
+      <h1>My Grid</h1>
+      <vaadin-grid items="[[gridData]]" column-reordering-allowed multi-sort>
+
+        <vaadin-grid-selection-column auto-select frozen> </vaadin-grid-selection-column>
+
+        <vaadin-grid-column width="9em" resizable>
+          <template class="header">
+            <vaadin-grid-sorter path="username">Name</vaadin-grid-sorter>
+          </template>
+          <template>[[item.username]]</template>
+        </vaadin-grid-column>
+
+        <vaadin-grid-column width="9em" resizable>
+          <template class="header">
+            <vaadin-grid-sorter path="phone">Phone</vaadin-grid-sorter>
+          </template>
+          <template>[[item.phone]]</template>
+        </vaadin-grid-column>
+
+        <vaadin-grid-column width="15em" flex-grow="2" resizable>
+          <template class="header">
+            <vaadin-grid-sorter path="email">Email</vaadin-grid-sorter>
+          </template>
+          <template>[[item.email]]</template>
+        </vaadin-grid-column>
+
+      </vaadin-grid>
+
+      <div>
+        <h1>My Chart</h1>
+        <google-chart type='pie' options='{"title": "Ajax user details"}' 
+        cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
+          rows='[["Jan", 31],["Feb", 28],["Mar", 31]]'>
+        </google-chart>
+      </div>
+      <iron-ajax id="userdetailAjax" url="https://jsonplaceholder.typicode.com/users" method="GET" handle-as="json"></iron-ajax>
+  </template>
+
+  <script>
+    class MyView4 extends Polymer.Element {
+      static get is() { return 'my-view4'; }
+
+      static get properties() {
+        return {
+          myText: {
+            type: String,
+            value: 'default'
+          },
+          myCheckBox: {
+            type: Array,
+            value: []
+          },
+          checkboxConfig: {
+            type: Array,
+            value: [
+              { label: 'One', value: 1 },
+              { label: 'Two', value: 2 },
+              { label: 'Three', value: 3 },
+              { label: 'Four', value: 4 }
+            ]
+          },
+          myRadio: {
+            type: String,
+            value: 'apple'
+          },
+          myDropDown: {
+            type: String,
+            value: 'allosaurus'
+          }
+        }
+      }
+
+      checkBoxClick(event) {
+        console.log('Before- ' + this.myCheckBox);
+        let checkBoxValue = event.target.value;
+        if (event.target.checked) {
+          this.myCheckBox.push(checkBoxValue);
+        } else {
+          let eleIndex = this.myCheckBox.indexOf(checkBoxValue);
+          if (eleIndex > -1) {
+            this.myCheckBox.splice(eleIndex, 1);
+          }
+        }
+        console.log('After - ' + this.myCheckBox);
+      }
+
+      submitForm() {
+        let formData = {
+          name: this.myText,
+          number: this.myCheckBox,
+          radio: this.myRadio
+        }
+
+        let userDetailAjaxEle = this.$.userdetailAjax.generateRequest(); //Polymer.dom(this.root).querySelector('#userdetail-ajax').generateRequest();
+
+        userDetailAjaxEle.completes.then((e) => {
+          console.log(e.__data.response);
+          this.gridData = e.__data.response;
+        })
+
+        console.log(JSON.stringify(formData));
+      }
+    }
+
+    window.customElements.define(MyView4.is, MyView4);
+  </script>
+</dom-module>
